@@ -4,4 +4,5 @@
 - Added a library Mlib_sec
 - Login
 	> password hashing using PBKDF2 (ref: http://crackstation.net/hashing-security.htm#phpsourcecode)
-
+- Removed default files on Controller & Views folder
+- Added logout controller

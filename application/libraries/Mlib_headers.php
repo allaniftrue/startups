@@ -4,7 +4,7 @@ Description: Library is used to un-cache the header.  Library  is usually used t
 Usage: Load library on pages you don't want to be cached
 */
 if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
-class Me_header {
+class Mlib_headers {
 
 	public function __construct(){
 		$this->clear_cache();
