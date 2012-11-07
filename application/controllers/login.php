@@ -5,7 +5,6 @@ class Login extends CI_Controller {
 		parent::__construct();
 	}
 
-
 	public function auth() {
 		
 		$this->load->library('Mlib_sec');
@@ -29,13 +28,18 @@ class Login extends CI_Controller {
 				
 				if($is_valid === TRUE) {
 
+					$this->load->model("Logsq");
+
 					$array = array(
 									'uid'=>$result[0]->id,
+									'username'=>$username,
 									'is_login'=>TRUE
 					);
-					$this->session->setuserdata($array);
-					#redirect to account dashboard
+					$this->session->set_userdata($array);
+					/* Log */
+					$this->Logsq->login_log("Login");
 
+					redirect(base_url()."dashboard", "refresh");
 				} else {
 					#show error invalid username/password
 				}
