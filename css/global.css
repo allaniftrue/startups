@@ -40,6 +40,22 @@ hr {
     margin: 1em 0; padding: 0; 
 }
 
+label.required:before {
+	content:"*";
+	color:red;
+	font-family:"Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
+}
+label.ok {
+	background:url("../img/valid.gif") no-repeat;
+	padding-left:16px;
+}
+label.error {
+	color:#d00;
+	text-transform:none;
+	margin-left:6px;
+        display: inline
+}
+
 div.main {
 	background-color: #FCFCFA;
 	border: solid 1px #E2E0D8;
