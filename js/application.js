@@ -9,6 +9,11 @@
 		$('#avatar-holder').tooltip({
 			placement:'right'
 		})
+                
+                $('#contact').tooltip({
+                    placement:'right',
+                    trigger:'focus'
+                })
 
 		$('#avatar-holder').live({
 			mouseenter: function() {
@@ -77,8 +82,63 @@
                                                 responseJSON.error)
                         }
                       }
-                    })
-        /* /file uploader */
+                    }) /* end of file upload */
+                    
+                    /* validate profile*/
+                    var validator = $("#profileform").validate({
+                                            rules: {
+                                                    firstname: "required",
+                                                    lastname: "required",
+                                                    email: {
+                                                            required: true,
+                                                            email: true
+                                                    },
+                                                    contact: {
+                                                            required: true,
+                                                            digits: true
+                                                    },
+                                                    address: "required"
+                                            },
+                                            messages: {
+                                                    firstname: "Enter your firstname",
+                                                    lastname: "Enter your lastname",
+                                                    email: {
+                                                            required: "Please enter a valid email address",
+                                                            minlength: "Please enter a valid email address"
+                                                    },
+                                                    contact:"Enter a valid contact number",
+                                                    address:"Enter your full address"
+                                            },
+                                            errorPlacement: function(error, element) {
+                                                    element.parent().find('label:first').append(error);
+                                            },
+                                            submitHandler: function() {
+                                                
+                                                    $.ajax({
+                                                            type:'POST',
+                                                            url:base_url+'settings/save_profile',
+                                                            dataType:'json',
+                                                            data: {
+                                                                lastname:$('#lastname').val(),
+                                                                firstname:$('#firstname').val(),
+                                                                email:$('#email').val(),
+                                                                contact:$('#contact').val(),
+                                                                address:$('#address').val()
+                                                            },
+                                                            success: function(response) {
+                                                                $('.modal-body').empty().append('<p>'+response.message+'')
+                                                            },
+                                                            error: function(response) {
+                                                                $('.modal-body').empty().append(response.message)
+                                                            }
+                                                    })
+                                                    $('#myModal').modal("show");
+                                            },
+                                            // set new class to error-labels to indicate valid fields
+                                            success: function(label) {
+                                                    // set &nbsp; as text for IE
+                                                    label.html("&nbsp;").addClass("ok");
+                                            }
+                    });
 	})
-
 }(window.jQuery)
