@@ -106,6 +106,65 @@ class Settings extends CI_Controller {
         }
         
         
+        public function save_profile() {
+            
+            $lastname = $this->input->post('lastname');
+            $firstname = $this->input->post('firstname');
+            $email = $this->input->post('email');
+            $contact = $this->input->post('contact');
+            $address = $this->input->post('address');
+            
+            if(! empty($lastname) && ! empty($firstname) && ! empty($email) && ! empty($contact) && ! empty($address)) {
+                
+                $sql = $this->db->get_where('pre_profile',array('id'=>$this->session->userdata('uid')));
+                $num_res = $sql->num_rows();
+                
+                if($num_res == 1) {
+                    
+                    $data = array(
+                                    'lastname'  => $lastname,
+                                    'firstname' => $firstname,
+                                    'email'     => $email,
+                                    'contact'   => $contact,
+                                    'address'   => $address,
+                                 );
+
+                     $this->db->where('id', $this->session->userdata('uid'));
+                     $this->db->update('profile', $data); 
+                     $aff_rows = $this->db->affected_rows();
+                     
+                     if($aff_rows > 0) {
+                         echo json_encode(array("status"=>1,"message"=>"Profile successfuly updated."));
+                     } else {
+                         echo json_encode(array("status"=>0,"message"=>"Failed to update profile information."));
+                     }
+                     
+                } else {
+                    $data = array(
+                                    'id'        => $this->session->userdata('uid'),
+                                    'lastname'  => $lastname,
+                                    'firstname' => $firstname,
+                                    'email'     => $email,
+                                    'contact'   => $contact,
+                                    'address'   => $address,
+                                 );
+
+                     $this->db->insert('pre_profile', $data); 
+                     $aff_rows = $this->db->affected_rows();
+                     
+                     if($aff_rows > 0) {
+                         echo json_encode(array("status"=>1,"message"=>"Profile successfuly updated."));
+                     } else {
+                         echo json_encode(array("status"=>0,"message"=>"Failed to save profile information."));
+                     }
+                }
+                
+            } else {
+                echo json_encode(array("status"=>0,"message"=>"Some fields are missing."));
+            }
+            
+        }
+        
 
 
 }
