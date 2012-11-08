@@ -27,22 +27,22 @@
 
             <p>
               <label for="firstname" class="required"><strong>First Name </strong></label>
-              <input type="text" class="input input-large span5" id="firstname" name="firstname" />
+              <input type="text" class="input input-large span5" id="firstname" name="firstname" value="<?=$profile[0]->firstname ? $profile[0]->firstname : ''?>" />
             </p>
 
             <p>
               <label for="email" class="required"><strong>Email </strong></label>
-              <input type="text" class="input input-large span5" id="email" name="email" />
+              <input type="text" class="input input-large span5" id="email" name="email" value="<?=$profile[0]->email ? $profile[0]->email : ''?>" />
             </p>
             
             <p>
               <label for="contact" class="required"><strong>Contact Number </strong></label>
-              <input type="text" class="input input-large span5" id="contact" name="contact" title="ex. 639431842743" />
+              <input type="text" class="input input-large span5" id="contact" name="contact" title="ex. 639431842743" value="<?=$profile[0]->contact ? $profile[0]->contact : ''?>" />
             </p>
 
             <p>
               <label for="address" class="required"><strong>Address </strong></label>
-              <input type="text" class="input input-large span5" id="address" name="address" />
+              <input type="text" class="input input-large span5" id="address" name="address" value="<?=$profile[0]->address ? $profile[0]->address : ''?>" />
             </p>
 
             <p>
