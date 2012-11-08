@@ -1,8 +1,10 @@
 - Using Codeigniter v2.1.3
 - Bootstrap v2.2.1
+- Font Awesome v2.0
 
 - Added a library Mlib_sec
 - Login
 	> password hashing using PBKDF2 (ref: http://crackstation.net/hashing-security.htm#phpsourcecode)
 - Removed default files on Controller & Views folder
 - Added logout controller
+- Save / Edit profile settings
