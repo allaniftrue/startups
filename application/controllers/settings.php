@@ -5,10 +5,11 @@ class Settings extends CI_Controller {
 
 		parent::__construct();
 		$this->load->model("Userq");
+                $this->load->model("Logsq");
 
                 $this->load->library("Mlib_headers");
 		$this->load->library("Mlib_trac");
-                                
+                
 		$this->mlib_trac->trac_login();
 
 	}
@@ -93,8 +94,6 @@ class Settings extends CI_Controller {
                     $stat_prof = $this->db->insert('pre_profile', $data);
                 }
 
-
-
                 $json=array('status'=>'Success', 'issue'=> 'Photo updated', 
                             'filename'=> base_url().'profile/'.$filename."_thumb.".$ext);	
 
@@ -153,6 +152,10 @@ class Settings extends CI_Controller {
                      $aff_rows = $this->db->affected_rows();
                      
                      if($aff_rows > 0) {
+                         
+                         /* Log */
+                         $this->Logsq->login_log("Profile change");
+                         
                          echo json_encode(array("status"=>1,"message"=>"Profile successfuly updated."));
                      } else {
                          echo json_encode(array("status"=>0,"message"=>"Failed to save profile information."));
@@ -165,6 +168,60 @@ class Settings extends CI_Controller {
             
         }
         
-
+        /* Account Settings -- Password */
+        public function admin() {
+            $this->load->view('settings/account_view');
+        }
+        
+        public function change_password() {
+            
+            $this->load->library('Mlib_sec');
+            
+            $old_password = $this->input->post('oldpassword');
+            $new_password = $this->input->post('newpassword');
+            
+//            $attempts = 3;
+            
+            $this->db->select('salt,password');
+            $sql = $this->db->get_where('pre_users',array('id'=>$this->session->userdata('uid')));
+            $result = $sql->result();
+            
+            $format = PBKDF2_HASH_ALGORITHM.":".PBKDF2_ITERATIONS.":".$result[0]->salt.":".$result[0]->password;
+            $is_valid = $this->mlib_sec->validate_password($old_password,$format);
+            
+            if($is_valid === TRUE) {
+                
+                $hashed = $this->mlib_sec->create_hash($new_password);
+                $hashed_parts = explode(":", $hashed);
+                
+                $array = array(
+                                'password'=>$hashed_parts[3],
+                                'salt'=>$hashed_parts[2]
+                );
+                
+                $this->db->where('id',$this->session->userdata('uid'));
+                $this->db->update('pre_users', $array);
+                $aff_rows = $this->db->affected_rows();
+                
+                if($aff_rows == 1) {
+                    echo json_encode(array("status"=>1,"message"=>"New password saved."));
+                } else {
+                    echo json_encode(array("status"=>0,"message"=>"Unable to update account information.  Please try again later."));
+                }
+                
+            } else {
+                /* @TODO
+                 * Capture and limit change password attempts
+                 * 
+                 */
+                echo json_encode(array("status"=>0,"message"=>"Wrong information provided."));
+                
+                
+            }
+        }
+        
+        
+        
+        
 
 }
