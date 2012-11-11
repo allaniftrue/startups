@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 	    <meta charset="utf-8">
-	    <title><?=(!empty($title)) ? $title : "" ?></title>
+	    <title>Administration Panel</title>
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	    <link rel="stylesheet" href="<?=base_url()?>css/bootstrap.min.css" />
