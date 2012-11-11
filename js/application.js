@@ -1,16 +1,21 @@
 !function ($) {
 
 	$(function(){
+                
+                /* Global Variables */
+                var newURL = window.location.protocol + "://" + window.location.host + "/" + window.location.pathname
+                var pathArray = window.location.pathname.split( '/' )
+            
 		/* tooltips */
 		$('#tooltip').tooltip({
 			placement:'bottom'
 		})
 
-		$('#avatar-holder').tooltip({
+		$('#avatar-holder,#tooltip-right').tooltip({
 			placement:'right'
 		})
                 
-                $('#contact').tooltip({
+                $('#contact,#newpassword').tooltip({
                     placement:'right',
                     trigger:'focus'
                 })
@@ -85,7 +90,7 @@
                     }) /* end of file upload */
                     
                     /* validate profile*/
-                    var validator = $("#profileform").validate({
+                    $("#profileform").validate({
                                             rules: {
                                                     firstname: "required",
                                                     lastname: "required",
@@ -127,6 +132,82 @@
                                                             },
                                                             success: function(response) {
                                                                 $('.modal-body').empty().append('<p>'+response.message+'')
+                                                                $('label.ok').remove()
+                                                            },
+                                                            error: function(response) {
+                                                                $('.modal-body').empty().append(response.message)
+                                                            }
+                                                    })
+                                                    $('#myModal').modal("show");
+                                            },
+                                            // set new class to error-labels to indicate valid fields
+                                            success: function(label) {
+                                                    // set &nbsp; as text for IE
+                                                    label.html("&nbsp;").addClass("ok");
+                                            }
+                    });//profile save
+                    
+                    
+                    /*account settings*/
+//                    if(pathArray[3] === 'admin') {
+//                        $.getScript(base_url+'js/jquery.validate.password.js', function(data, textStatus, jqxhr) {
+//                            
+//                            $.validator.passwordRating.messages = {
+//                                    "too-short": "Too short",
+//                                    "very-weak": "Very Weak",
+//                                    "weak": "Weak",
+//                                    "good": "Good",
+//                                    "strong": "Strong"
+//                            }
+//                            
+//                            
+//                            if(textStatus === 'success') {
+//                                $("#newpassword").validate()
+//                            }
+//                        });
+//                    }
+                    
+                    
+                    
+                    $("#accountform").validate({
+                                            rules: {
+                                                    oldpassword: "required",
+                                                    newpassword: {
+                                                            required: true,
+                                                            minlength:8
+                                                    },
+                                                    newpassword_c: {
+                                                            required:true,
+                                                            equalTo: "#newpassword"
+                                                    }
+                                            },
+                                            messages: {
+                                                    oldpassword: "Enter your old password",
+                                                    newpassword: {
+                                                        required:"Enter your new password",
+                                                        maxlength:"Enter at least {0} characters"
+                                                    },
+                                                    newpassword_c: {
+                                                            required:"Confirm your new password",
+                                                            equalTo: "Password mismatch"
+                                                    }
+                                            },
+                                            errorPlacement: function(error, element) {
+                                                    element.parent().find('label:first').append(error);
+                                            },
+                                            submitHandler: function() {
+                                                
+                                                    $.ajax({
+                                                            type:'POST',
+                                                            url:base_url+'settings/change_password',
+                                                            dataType:'json',
+                                                            data: {
+                                                                oldpassword:$('#oldpassword').val(),
+                                                                newpassword:$('#newpassword').val()
+                                                            },
+                                                            success: function(response) {
+                                                                $('.modal-body').empty().append('<p>'+response.message+'')
+                                                                $('label.ok').remove()
                                                             },
                                                             error: function(response) {
                                                                 $('.modal-body').empty().append(response.message)
